@@ -1,0 +1,69 @@
+{
+  "name": "真相之间",
+  "description": "一个圆形的房间，中心有一个发光的平台，周围是破碎的镜子",
+  "ambientLight": {
+    "color": "#0a1a2a",
+    "intensity": 0.15
+  },
+  "fog": {
+    "color": "#050a15",
+    "near": 2,
+    "far": 30
+  },
+  "playerStart": {
+    "position": [0, 1.6, 10],
+    "rotation": [0, 0, 0]
+  },
+  "objects": [
+    {
+      "type": "interactive",
+      "id": "final_device",
+      "position": [0, 1, 0],
+      "model": "final_device",
+      "interaction": "finalPuzzle",
+      "hint": "将所有记忆碎片放入这个装置",
+      "data": {
+        "requiredFragments": 7,
+        "unlocks": "final_message"
+      }
+    },
+    {
+      "type": "collectible",
+      "id": "photo_fragment_07",
+      "position": [5, 1, 5],
+      "model": "photo_fragment",
+      "photoId": "future",
+      "hint": "最后的碎片，描绘着未来的愿景"
+    },
+    {
+      "type": "special",
+      "id": "mirror_array",
+      "position": [0, 2, -8],
+      "model": "mirror_broken",
+      "interaction": "mirrorVision",
+      "hint": "镜中映出的不是现在的你",
+      "data": {
+        "vision": "第一次约会的场景",
+        "sanityCost": 15
+      }
+    }
+  ],
+  "audio": {
+    "ambient": "scene3_ambient",
+    "volume": 0.3
+  },
+  "triggers": [
+    {
+      "type": "area",
+      "position": [0, 0, 5],
+      "radius": 2,
+      "action": "showMessage",
+      "data": "你能感受到她的存在...就在这里",
+      "once": false
+    }
+  ],
+  "ending": {
+    "requiredPhotos": 7,
+    "message": "当所有记忆重聚，真相将会显现"
+  }
+}

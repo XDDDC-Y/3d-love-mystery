@@ -1,0 +1,70 @@
+{
+  "name": "初始迷宫",
+  "description": "一个看似无尽的迷宫，墙上有着奇怪的符号",
+  "ambientLight": {
+    "color": "#202030",
+    "intensity": 0.3
+  },
+  "fog": {
+    "color": "#0a0a14",
+    "near": 5,
+    "far": 50
+  },
+  "playerStart": {
+    "position": [0, 1.6, 0],
+    "rotation": [0, 0, 0]
+  },
+  "objects": [
+    {
+      "type": "wall",
+      "id": "wall_north",
+      "position": [0, 2.5, -20],
+      "scale": [20, 5, 1],
+      "texture": "wall_01",
+      "collision": true
+    },
+    {
+      "type": "interactive",
+      "id": "diary_01",
+      "position": [3, 1, -3],
+      "model": "diary",
+      "interaction": "openDiary",
+      "hint": "潦草的字迹记录着某些日期",
+      "data": {
+        "content": "4.20 - 第一次见到她...",
+        "clue": "420"
+      }
+    },
+    {
+      "type": "puzzle",
+      "id": "puzzle_01",
+      "position": [0, 1, 5],
+      "model": "puzzle_device",
+      "puzzleType": "number",
+      "solution": "420",
+      "reward": "photo_fragment_01"
+    },
+    {
+      "type": "collectible",
+      "id": "photo_fragment_01",
+      "position": [12, 1, 5],
+      "model": "photo_fragment",
+      "photoId": "meeting",
+      "hint": "照片的碎片，隐约能看到两个人影"
+    }
+  ],
+  "audio": {
+    "ambient": "scene1_ambient",
+    "volume": 0.5
+  },
+  "triggers": [
+    {
+      "type": "area",
+      "position": [0, 0, -15],
+      "radius": 3,
+      "action": "showMessage",
+      "data": "你感觉到一阵寒意...有什么东西在看着你",
+      "once": true
+    }
+  ]
+}

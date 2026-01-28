@@ -1,0 +1,75 @@
+{
+  "name": "记忆回廊",
+  "description": "无尽的长廊，两侧挂满了空相框，墙上有发光的符号",
+  "ambientLight": {
+    "color": "#301010",
+    "intensity": 0.2
+  },
+  "fog": {
+    "color": "#1a0000",
+    "near": 3,
+    "far": 40
+  },
+  "playerStart": {
+    "position": [0, 1.6, 0],
+    "rotation": [0, 3.14, 0]
+  },
+  "objects": [
+    {
+      "type": "wall",
+      "id": "gallery_wall",
+      "position": [0, 0, -50],
+      "scale": [100, 10, 0.5],
+      "texture": "wall_gallery",
+      "collision": true
+    },
+    {
+      "type": "interactive",
+      "id": "photo_frame_01",
+      "position": [-8, 2, -45],
+      "model": "photo_frame",
+      "interaction": "insertPhoto",
+      "hint": "空的相框，需要插入照片碎片",
+      "data": {
+        "requiredFragment": "dating",
+        "reward": "memory_01"
+      }
+    },
+    {
+      "type": "puzzle",
+      "id": "sequence_puzzle",
+      "position": [0, 1, -30],
+      "model": "puzzle_device",
+      "puzzleType": "sequence",
+      "solution": ["相遇", "告白", "旅行"],
+      "hint": "按正确顺序排列关键事件",
+      "reward": "photo_fragment_02"
+    },
+    {
+      "type": "collectible",
+      "id": "photo_fragment_02",
+      "position": [20, 3, -35],
+      "model": "photo_fragment",
+      "photoId": "anniversary",
+      "hint": "第二张照片碎片，能看到庆祝的场景"
+    },
+    {
+      "type": "trigger",
+      "id": "whisper_trigger",
+      "position": [0, 0, -10],
+      "radius": 4,
+      "action": "playSound",
+      "sound": "whisper",
+      "message": "远处传来熟悉的笑声..."
+    }
+  ],
+  "audio": {
+    "ambient": "scene2_ambient",
+    "volume": 0.4
+  },
+  "effects": {
+    "flickerLights": true,
+    "randomSounds": true,
+    "sanityDrain": 0.1
+  }
+}

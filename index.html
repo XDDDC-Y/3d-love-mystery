@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>记忆回廊 - 致豫</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- 字体图标库（必须保留） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google字体（可选，恐怖风格字体） -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            color: #e0e0e0;
+            background: #0a0a14;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(10, 10, 20, 0.95);
+        }
+        
+        .screen.hidden {
+            display: none;
+        }
+        
+        /* 标题屏幕样式 */
+        #titleScreen {
+            background: linear-gradient(135deg, #0a0a14 0%, #1a1a2e 100%);
+        }
+        
+        .title-container {
+            text-align: center;
+            padding: 40px;
+            max-width: 800px;
+        }
+        
+        .game-title {
+            font-family: 'Cinzel', serif;
+            font-size: 4em;
+            margin-bottom: 20px;
+            color: #9d8aff;
+            text-shadow: 0 0 20px rgba(157, 138, 255, 0.5);
+            letter-spacing: 5px;
+        }
+        
+        .game-subtitle {
+            font-size: 1.5em;
+            margin-bottom: 50px;
+            color: #8a8aff;
+        }
+        
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .menu-btn {
+            padding: 15px 30px;
+            background: rgba(42, 42, 74, 0.8);
+            border: 2px solid #9d8aff;
+            color: #e0e0e0;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .menu-btn:hover {
+            background: rgba(157, 138, 255, 0.2);
+            border-color: #ff6b8b;
+            transform: translateY(-2px);
+        }
+        
+        .menu-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 加载屏幕样式 */
+        #loadingScreen {
+            background: #0a0a14;
+        }
+        
+        .loading-container {
+            text-align: center;
+        }
+        
+        .loading-text {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #8a8aff;
+        }
+        
+        .loading-bar {
+            width: 300px;
+            height: 20px;
+            background: rgba(42, 42, 74, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        
+        .loading-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #9d8aff, #ff6b8b);
+            transition: width 0.3s;
+        }
+        
+        /* 游戏容器 */
+        #gameContainer {
+            background: transparent;
+            pointer-events: none;
+        }
+        
+        /* 隐藏所有屏幕的默认显示 */
+        .screen {
+            display: none;
+        }
+        
+        .screen.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+    <!-- 标题屏幕 -->
+    <div id="titleScreen" class="screen active">
+        <div class="title-container">
+            <h1 class="game-title">记忆回廊</h1>
+            <div class="game-subtitle">致豫：寻找失落的碎片</div>
+            <div class="menu-buttons">
+                <button class="menu-btn" onclick="window.startNewGame()">
+                    <i class="fas fa-play"></i> 新的旅程
+                </button>
+                <button class="menu-btn" id="continueBtn" onclick="window.loadGame()" disabled>
+                    <i class="fas fa-history"></i> 继续探索
+                </button>
+                <button class="menu-btn" onclick="window.showArchives()">
+                    <i class="fas fa-images"></i> 记忆档案
+                </button>
+                <button class="menu-btn" onclick="window.showSettings()">
+                    <i class="fas fa-cog"></i> 设置
+                </button>
+                <button class="menu-btn" onclick="showHints()">
+                    <i class="fas fa-question-circle"></i> 游戏提示
+                </button>
+            </div>
+            <div style="margin-top: 50px; color: #666; font-size: 0.9em;">
+                <p>一个关于爱与记忆的诡异之旅</p>
+                <p style="margin-top: 10px;">使用 WASD 移动，鼠标查看，E 键交互</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 加载屏幕 -->
+    <div id="loadingScreen" class="screen">
+        <div class="loading-container">
+            <div class="loading-text" id="loadingText">加载记忆中...</div>
+            <div class="loading-bar">
+                <div class="loading-fill" id="loadingFill"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 游戏容器 -->
+    <div id="gameContainer" class="screen">
+        <!-- 游戏画布由Three.js创建 -->
+        <canvas id="gameCanvas"></canvas>
+    </div>
+    
+    <!-- 注意：这里不再直接引入main.js -->
+    <!-- 改为在下面的模块脚本中引入 -->
+    
+    <!-- Three.js库的ES6模块导入 -->
+    <canvas id="gameCanvas"></canvas>
+</body>
+</html>
